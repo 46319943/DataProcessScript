@@ -1,3 +1,8 @@
+'''
+利用高新公司进行核密度分析生成栅格文件
+提取房屋对应的位置的值
+'''
+
 # encoding: utf-8
 import arcpy
 from arcpy.sa import *

@@ -1,3 +1,7 @@
+'''
+用房屋、POI计算OD成本矩阵，得到阈值内的距离关系
+'''
+
 # encoding: utf-8
 import arcpy
 import os

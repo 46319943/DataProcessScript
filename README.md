@@ -18,3 +18,7 @@
             - Czone.csv不存在
         - Liupanshui
             - Czone.csv内容错误
+        - Guangzhou
+            - Disease.csv第一列名称列
+            - GHotel.csv第一列名称列
+            - Subway.csv第一列名称列

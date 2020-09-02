@@ -1,5 +1,6 @@
 '''
 将Excel格式的POI，转为UTF-8编码的CSV格式
+同时，对于首列列名错误的
 '''
 
 from pathlib import Path
@@ -12,4 +13,8 @@ csv_folder_path = Path(poi_csv_folder_filepath)
 for xls_path in excel_folder_path.glob('**/*.xls'):
     csv_path = (csv_folder_path / xls_path.relative_to(excel_folder_path)).with_suffix('.csv')
     csv_path.parent.mkdir(parents=True, exist_ok=True)
-    pd.read_excel(xls_path).to_csv(csv_path, index=False, encoding='UTF-8')
+    df = pd.read_excel(xls_path)
+    if str(df.columns[0]) == '1':
+        df = df.rename(columns={df.columns[0]: '名称'})
+        print(f'fix first column for {csv_path}')
+    df.to_csv(csv_path, index=False, encoding='UTF-8')

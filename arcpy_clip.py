@@ -12,7 +12,7 @@ import glob
 import arcpy
 import xlrd
 
-from const_variables import city_name_list, china_shp_folder_filepath, poi_csv_folder_filepath, poi_shp_folder_filepath, a3_hospital_csv_filepath, business_district_csv_filepath, get_city_district_shp_filepath
+from const_variables import city_name_list, china_shp_folder_filepath, poi_csv_folder_filepath, poi_shp_folder_filepath, a3_hospital_csv_filepath, business_district_csv_filepath, get_city_district_shp_filepath, house_data_folder_filepath
 
 # 创建WGS84坐标系对象
 spatial_ref = arcpy.SpatialReference(4326)
@@ -80,6 +80,13 @@ def clip_csv(csv_filepath, shp_folder_filepath, district_shp_filepath=None, x_fi
 
     # 输出路径
     print(csv_filepath + ' -> ' + output_shp_filepath)
+    
+    if exists(output_shp_filepath):
+        if not override:
+            print('exist and skip')
+            return
+        else:
+            print('exist and override')
 
     # 没提供行政区划SHP文件路径，则根据中国行政区划目录与CSV文件路径自动生成
     if district_shp_filepath is None:
@@ -94,12 +101,6 @@ def clip_csv(csv_filepath, shp_folder_filepath, district_shp_filepath=None, x_fi
             else:
                 raise Exception('district shapefile filepath error')
 
-    if exists(output_shp_filepath):
-        if not override:
-            print('exist and skip')
-            return
-        else:
-            print('exist and override')
 
     arcpy.MakeXYEventLayer_management(
         csv_filepath, x_field, y_field, csv_filename + 'Event', spatial_ref)
@@ -116,5 +117,4 @@ def clip_csv(csv_filepath, shp_folder_filepath, district_shp_filepath=None, x_fi
 
 if __name__ == "__main__":
     clip_poi()
-    # clip_house(r'D:\Document\HousePricing\Data\House\RentCSV1')
-    # clip_multi_house(r'D:\Document\HousePricing\Data\House')
+    clip_multi_house(house_data_folder_filepath)

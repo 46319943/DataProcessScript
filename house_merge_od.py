@@ -1,6 +1,6 @@
 '''
 读取arcpy_network生成的成本矩阵表格文件
-进行统计、计算、链接
+进行统计、计算、与房屋文件进行链接
 
 geopandas创建的geodataframe占用内存过大
 因此，对于OD矩阵的shp文件，不应用它读取。

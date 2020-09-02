@@ -6,32 +6,37 @@ from os.path import join
 city_name_list = ['Baoding', 'Baotou', 'Beijing', 'Binzhou', 'Changchun', 'Changji', 'Changsha', 'Changzhou', 'Chaoyang', 'Chengdu', 'Chongqing', 'Chuxiong', 'Congzuo', 'Dalian', 'Dandong', 'Dongguan', 'Fuzhou', 'Guangzhou', 'Guilin', 'Guiyang', 'Haerbing', 'Haikou', 'Handan', 'Hangzhou', 'Hanzhong', 'Hefei', 'Heyuan', 'Heze', 'Huaian', 'Huaihua', 'Huainan', 'Huangshi', 'Huhehaote', 'Huludao', 'Hulunbeier', 'Jiamusi', 'Jiaxing', 'Jilin', 'Jinan', 'Kunming', 'Lanzhou', 'Lasa', 'Leshan', 'Liangshan', 'Liaoyang', 'Lijiang', 'Linfen', 'Lishui', 'Liuan', 'Liupanshui', 'Loudi', 'Luohe',
                   'Luoyang', 'Luzhou', 'Maanshan', 'Maoming', 'Meizhou', 'Mianyang', 'Mudanjiang', 'Nanchang', 'Nanchong', 'Nanjing', 'Nanning', 'Nantong', 'Neijiang', 'Ningbo', 'Panzhihua', 'Qingdao', 'Shanghai', 'Shantou', 'Shenyang', 'Shenzhen', 'Shijiazhuang', 'Suqian', 'Suzhou', 'Tacheng', 'Taiyuan', 'Tianjin', 'Tianmen', 'Tongren', 'Weifang', 'Weihai', 'Wenshan', 'Wenzhou', 'Wuhan', 'Wuhu', 'Wulumuqi', 'Wuwei', 'Wuxi', 'Wuzhong', 'Xiamen', 'Xian', 'Xiantao', 'Xining', 'Yanan', 'Yanbian', 'Yangjiang', 'Yangquan', 'Yantai', 'Yichang', 'Yichun', 'Yinchuan', 'Yiyang', 'Zhengzhou', 'Zhuhai']
 
+# 数据目录路径
+base_data_folder_filepath = r'D:\Document\HousePricing\Data'
+
 # 中国城市行政区目录路径
-china_shp_folder_filepath = r'D:\Document\HousePricing\Data\ChinaSHP'
+china_shp_folder_filepath = join(base_data_folder_filepath, 'ChinaSHP') 
 # POI的Excel文件目录路径
-poi_xls_folder_filpath = r'D:\Document\HousePricing\Data\POI\Excel'
+poi_xls_folder_filpath = join(base_data_folder_filepath, 'POI/Excel')
 # POI的CSV文件目录路径
-poi_csv_folder_filepath = r'D:\Document\HousePricing\Data\POI\CSV'
+poi_csv_folder_filepath = join(base_data_folder_filepath, 'POI/CSV')
 # POI的SHP文件目录路径
-poi_shp_folder_filepath = r'D:\Document\HousePricing\Data\POI\SHP'
+poi_shp_folder_filepath = join(base_data_folder_filepath, 'POI/SHP')
 # 三甲医院的CSV文件路径
-a3_hospital_csv_filepath = r'D:\Document\HousePricing\Data\3AHospital.csv'
+a3_hospital_csv_filepath = join(base_data_folder_filepath, '3AHospital.csv')
 # 商圈的CSV文件路径
-business_district_csv_filepath = r'D:\Document\HousePricing\Data\BusinessDistrict.csv'
+business_district_csv_filepath = join(base_data_folder_filepath, 'BusinessDistrict.csv')
 # 全国路网地理数据库gdb文件路径
-road_network_geodatabase_filepath = r'D:\Document\HousePricing\Data\RoadNetwork\roadnet.gdb'
+road_network_geodatabase_filepath = join(base_data_folder_filepath, 'RoadNetwork/roadnet.gdb')
 # OD矩阵结果保存目录
-od_folder_filepath = r'D:\Document\HousePricing\Data\ODTable'
+od_folder_filepath = join(base_data_folder_filepath, 'ODTable')
 # Python3路径
 python3_filepath = r'D:\SoftwareInstall\Anaconda\python.exe'
 # Python2路径
 python2_filepath = r'C:\Python27\ArcGIS10.8\python.exe'
 # OD矩阵计算、连接结果保存目录
-od_merge_result_folder_filepath = r'D:\Document\HousePricing\Data\ODMerge'
+od_merge_result_folder_filepath = join(base_data_folder_filepath, 'ODMerge')
 # KDE分析生成的栅格临时文件目录
-kde_temp_folder_filepath = r'D:\Document\HousePricing\Data\KDERaster'
+kde_temp_folder_filepath = join(base_data_folder_filepath, 'KDERaster')
 # KDE分析生成的房屋点文件目录
-ked_house_folder_filepath = r'D:\Document\HousePricing\Data\KDEHouse'
+ked_house_folder_filepath = join(base_data_folder_filepath, 'KDEHouse')
+# 房屋数据目录路径
+house_data_folder_filepath = join(base_data_folder_filepath, 'House')
 
 
 def get_city_district_shp_filepath(city_name):
