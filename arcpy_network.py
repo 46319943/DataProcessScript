@@ -1,8 +1,9 @@
+# encoding: utf-8
+
 '''
 用房屋、POI计算OD成本矩阵，得到阈值内的距离关系
 '''
 
-# encoding: utf-8
 import arcpy
 import os
 from os import listdir, makedirs
@@ -96,12 +97,17 @@ def input_house_origin(house_folder_filepath):
             try:
                 arcpy.na.Solve(od)
             except Exception as e:
-                traceback.print_exc()
                 # 没找到解
                 if 'ERROR 030212' in e.message:
                     add_result(output_filepath)
                     print('no solution')
                     continue
+                if 'ERROR 030024' in e.message:
+                    add_result(output_filepath)
+                    print('fail to solve, no valid origin or destination')
+                    continue
+
+                traceback.print_exc()
                 raise Exception('exception debug')
 
             # 获取图层组

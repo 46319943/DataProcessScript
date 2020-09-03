@@ -1,9 +1,9 @@
+# encoding: utf-8
 '''
 利用高新公司进行核密度分析生成栅格文件
 提取房屋对应的位置的值
 '''
 
-# encoding: utf-8
 import arcpy
 from arcpy.sa import *
 import os
@@ -18,7 +18,10 @@ from const_variables import poi_shp_folder_filepath, kde_temp_folder_filepath, k
 
 def input_house(house_shp_folder_filepath):
     for csv_filepath in glob.glob(join(house_shp_folder_filepath, '*.shp')):
-        kde_house(csv_filepath)
+        try:
+            kde_house(csv_filepath)
+        except:
+            traceback.print_exc()
 
 
 def kde_house(house_shp_filepath):
@@ -27,7 +30,11 @@ def kde_house(house_shp_filepath):
     poi_shp_filepath = join(poi_shp_folder_filepath, house_shp_filename, 'AdvanComp.shp')
 
     raster = KernelDensity(poi_shp_filepath, None)
-    ExtractValuesToPoints(house_shp_filepath, raster, join(ked_house_folder_filepath, basename(house_shp_filepath)))
+
+    output_shp_filepath = join(ked_house_folder_filepath, basename(house_shp_filepath))
+    ExtractValuesToPoints(house_shp_filepath, raster, output_shp_filepath)
+
+    print(house_shp_filepath + ' -> ' + output_shp_filepath)
 
 
 if __name__ == "__main__":
