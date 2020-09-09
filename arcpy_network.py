@@ -12,7 +12,7 @@ import glob
 import traceback
 import pickle
 
-from const_variables import road_network_geodatabase_filepath, poi_shp_folder_filepath, city_name_list, od_folder_filepath
+from const_variables import road_network_geodatabase_filepath, poi_shp_folder_filepath, city_name_list, od_folder_filepath, od_exclude_poi_list
 
 # 覆盖SHP不警告
 arcpy.env.overwriteOutput = True
@@ -57,6 +57,10 @@ def input_house_origin(house_folder_filepath):
         for destination_filepath in glob.glob(join(poi_shp_folder_filepath, origin_filename, '*.shp')):
             # POI文件名
             destination_filename = splitext(basename(destination_filepath))[0]
+
+            if destination_filename in od_exclude_poi_list:
+                print(destination_filename + ' is excludes, skip')
+                continue
 
             output_filename = origin_filename + '_' + destination_filename + '.csv'
             output_filepath = join(od_folder_filepath,

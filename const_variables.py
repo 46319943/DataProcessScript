@@ -10,7 +10,7 @@ city_name_list = ['Baoding', 'Baotou', 'Beijing', 'Binzhou', 'Changchun', 'Chang
 base_data_folder_filepath = r'D:\Document\HousePricing\Data'
 
 # 中国城市行政区目录路径
-china_shp_folder_filepath = join(base_data_folder_filepath, 'ChinaSHP') 
+china_shp_folder_filepath = join(base_data_folder_filepath, 'ChinaSHP')
 # POI的Excel文件目录路径
 poi_xls_folder_filpath = join(base_data_folder_filepath, 'POI/Excel')
 # POI的CSV文件目录路径
@@ -31,6 +31,8 @@ python3_filepath = r'D:\SoftwareInstall\Anaconda\python.exe'
 python2_filepath = r'C:\Python27\ArcGIS10.8\python.exe'
 # OD矩阵计算、连接结果保存目录
 od_merge_result_folder_filepath = join(base_data_folder_filepath, 'ODMerge')
+# OD矩阵计算中，不进行计算的POI名称列表
+od_exclude_poi_list = ['Company']
 # KDE分析生成的栅格临时文件目录
 kde_temp_folder_filepath = join(base_data_folder_filepath, 'KDERaster')
 # KDE分析生成的房屋点文件目录
@@ -80,4 +82,9 @@ classify_pattern_list = [
     r'医药',
     r'材料',
     r'能源',
+]
+
+poi_hospital_name_list = [
+    'Ghospital',
+    'SHospital'
 ]

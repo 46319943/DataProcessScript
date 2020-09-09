@@ -141,7 +141,7 @@ def merge_house(house_shp_folder_filepath):
 
         # 核密度列名更改
         if 'RASTERVALU' in origin_df.columns:
-            origin_df.rename(columns={'RASTERVALU': 'KDEValue'})
+            origin_df = origin_df.rename(columns={'RASTERVALU': 'KDEValue'})
 
     
         origin_df.to_file(
