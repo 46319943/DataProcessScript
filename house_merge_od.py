@@ -17,7 +17,14 @@ import geopandas
 from simpledbf import Dbf5
 import re
 
-from const_variables import od_folder_filepath, od_merge_result_folder_filepath
+from const_variables import (
+    od_folder_filepath, od_merge_result_folder_filepath, ked_house_folder_filepath,
+    exclude_field_name_list, include_field_name_list, merge_field_name_dict,
+    final_field_name_list
+)
+
+from slab.logger.base_logger import logger
+
 od_folder_path = Path(od_folder_filepath)
 output_folder_path = Path(od_merge_result_folder_filepath)
 
@@ -55,17 +62,22 @@ def merge_house(house_shp_folder_filepath):
     for origin_filename in get_city_name_list():
         origin_filepath = house_shp_folder_path / (origin_filename + '.shp')
         output_filepath = output_folder_path / origin_filepath.name
+        output_filepath = output_filepath.with_suffix('.csv')
 
         # 如果输出文件存在，则打开已经输出的文件进行追加。否则打开源房租SHP文件
         if output_filepath.exists():
-            origin_df = geopandas.read_file(str(output_filepath))
+            # origin_df = geopandas.read_file(str())
+            origin_df = pd.read_csv(output_filepath)
+            print(f'get origin_df from {output_filepath}')
         else:
             origin_df = geopandas.read_file(str(origin_filepath))
+            print(f'get origin_df from {origin_filepath}')
 
         # 不存在元素则跳过
         if origin_df.shape[0] == 0:
             continue
 
+        # 统计城市下，各类POI
         for matrix_filepath in od_folder_path.glob(f'{origin_filename}_*.csv'):
             matrix_filename = matrix_filepath.stem
             _, destination_filename = matrix_filename.split('_')
@@ -95,7 +107,7 @@ def merge_house(house_shp_folder_filepath):
             if (destination_filename + 'Num') in origin_df.columns:
                 origin_df = origin_df.drop(columns=destination_filename + 'Num')
 
-            matrix_count_df = matrix_df[['OriginID']]
+            matrix_count_df = matrix_df.loc[:, ['OriginID']]
             try:
                 matrix_count_df.loc[:, destination_filename + 'Num'] = 0
             except:
@@ -110,7 +122,7 @@ def merge_house(house_shp_folder_filepath):
             if (destination_filename + 'Len') in origin_df.columns:
                 origin_df = origin_df.drop(columns=destination_filename + 'Len')
 
-            matrix_len_df = matrix_df[matrix_df['DestinationRank'] == 1][[
+            matrix_len_df = matrix_df.loc[matrix_df['DestinationRank'] == 1, [
                 'OriginID', 'Total_长度']]
             matrix_len_df = matrix_len_df.rename(
                 columns={'Total_长度': destination_filename + 'Len'})
@@ -127,7 +139,7 @@ def merge_house(house_shp_folder_filepath):
         # 公司类别的列
         company_colunm_list = []
         for column in origin_df.columns:
-            search_object = re.search('C\d+Num', column)
+            search_object = re.search(r'C\d+Num', column)
             if search_object is None:
                 continue
             company_colunm_list.append(column)
@@ -143,9 +155,100 @@ def merge_house(house_shp_folder_filepath):
         if 'RASTERVALU' in origin_df.columns:
             origin_df = origin_df.rename(columns={'RASTERVALU': 'KDEValue'})
 
-    
-        origin_df.to_file(
-            str(output_filepath), encoding='utf-8')
+        # 对字段进行修改
+        output_df = field_stat(origin_df, str(output_filepath))
+
+        output_df.to_csv(output_filepath, encoding='utf-8', index=False)
+
+
+def field_stat(df: pd.DataFrame, filename):
+    '''
+    修改字段相关信息
+    :return:
+    '''
+
+    # 错误字段改名
+    df = df.rename(columns={
+        'ExhibitiNum': 'ExhibitNum', 'ExhibitiLen': 'ExhibitLen',
+        'GHoyelNum': 'GHotelNum', 'GHoyelLen': 'GHotelLen',
+        'BhstoreNum': 'BHstoreNum', 'BhstoreLen': 'BHstoreLen',
+        'TeaHouseNum': 'TeahouseNum', 'TeaHouseLen': 'TeahouseLen',
+        'GhosptialNum': 'GhospitalNum', 'GhosptialLen': 'GhospitalLen',
+        'AgiculNum': 'AgriculNum', 'AgiculLen': 'AgriculLen'})
+
+    # 统计字段数量
+    include_field_count = 0
+    exclude_field_count = 0
+    for column in df.columns:
+        if column in include_field_name_list:
+            include_field_count = include_field_count + 1
+        if column in exclude_field_name_list:
+            exclude_field_count = exclude_field_count + 1
+
+    print(
+        f'包括字段：{include_field_count} / {len(include_field_name_list)}，排除字段：{exclude_field_count} / {len(exclude_field_name_list)}')
+
+    # 字段合并，需要在添加缺失字段之前
+    for from_field, to_field in merge_field_name_dict.items():
+        if (from_field + 'Num') not in df.columns:
+            continue
+
+        elif (to_field + 'Num') not in df.columns:
+            df[to_field + 'Num'] = df[from_field + 'Num']
+            df[to_field + 'Len'] = df[from_field + 'Len']
+
+        else:
+            # 数量直接相加
+            df[to_field + 'Num'] = df[to_field + 'Num'] + df[from_field + 'Num']
+
+            # 选择最近点数量不为0的行进行最小距离比较
+            df_to_min = df.loc[df[from_field + 'Num'] != 0, [from_field + 'Len', to_field + 'Len']]
+
+            # 将被融合字段最短距离为0的赋值为无穷大，从而剔除0可以进行最小值比较
+            df_to_min.loc[df_to_min[to_field + 'Len'] == 0, to_field + 'Len'] = np.inf
+
+            # 计算最小值
+            df_to_min.loc[:, to_field + 'Len'] = df_to_min[[from_field + 'Len', to_field + 'Len']].min(axis=1)
+
+            # 将结果子集赋值回原始数据帧
+            df.loc[df[from_field + 'Num'] != 0, [from_field + 'Len', to_field + 'Len']] = df_to_min
+
+        # 删除被融合的来源列
+        df = df.drop(columns=[from_field + 'Num', from_field + 'Len'])
+
+    # 添加缺失的字段
+
+    # for include_field_name in include_field_name_list:
+    #     if (include_field_name not in df.columns) and (
+    #             include_field_name.rstrip('Num').rstrip('Len') not in list(merge_field_name_dict.keys())
+    #     ):
+    #         df[include_field_name] = 0
+    #         print(f'添加字段：{include_field_name}')
+
+    for final_field_name in final_field_name_list:
+        if final_field_name not in df.columns:
+            df[final_field_name] = 0
+            print(f'添加字段：{final_field_name}')
+
+    # 删除排除的字段
+    for exclude_field_name in exclude_field_name_list:
+        if exclude_field_name in df.columns:
+            df = df.drop(columns=[exclude_field_name])
+
+    # 统计未知字段
+    for column in df.columns:
+        if (column not in include_field_name_list) and (column not in exclude_field_name_list):
+            print(f'未知字段：{column}')
+            logger.info(
+                f'文件：{filename}，存在未知字段{column}'
+            )
+
+    print(f'字段总数：{len(df.columns)}')
+
+    # 字段排序
+    df = df[final_field_name_list]
+
+    return df
 
 
 def clear_dir(dir_path_str):
@@ -154,4 +257,4 @@ def clear_dir(dir_path_str):
 
 
 if __name__ == "__main__":
-    merge_house('D:\Document\HousePricing\Data\House\RentSHP1')
+    merge_house(ked_house_folder_filepath)

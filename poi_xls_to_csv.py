@@ -1,6 +1,6 @@
 '''
 将Excel格式的POI，转为UTF-8编码的CSV格式
-同时，对于首列列名错误的
+同时，对于首列列名错误的，进行修改1
 '''
 
 from pathlib import Path
@@ -10,7 +10,7 @@ from const_variables import poi_xls_folder_filpath, poi_csv_folder_filepath
 excel_folder_path = Path(poi_xls_folder_filpath)
 csv_folder_path = Path(poi_csv_folder_filepath)
 
-for xls_path in excel_folder_path.glob('**/*.xls'):
+for xls_path in excel_folder_path.glob('**/*.xlsx'):
     csv_path = (csv_folder_path / xls_path.relative_to(excel_folder_path)).with_suffix('.csv')
     csv_path.parent.mkdir(parents=True, exist_ok=True)
     df = pd.read_excel(xls_path)

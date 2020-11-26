@@ -7,16 +7,17 @@
 import arcpy
 import os
 from os import listdir, makedirs
-from os.path import join, basename, splitext, isfile, exists
+from os.path import join, basename, splitext, isfile, exists, abspath
 import glob
 import traceback
 import pickle
 
-from const_variables import road_network_geodatabase_filepath, poi_shp_folder_filepath, city_name_list, od_folder_filepath, od_exclude_poi_list
+from const_variables import road_network_geodatabase_filepath, poi_shp_folder_filepath, city_name_list, od_folder_filepath, od_exclude_poi_list, house_data_folder_filepath
 
 # 覆盖SHP不警告
 arcpy.env.overwriteOutput = True
 
+print(abspath('arcpy_network_result.pkl'))
 if exists('arcpy_network_result.pkl'):
     with open('arcpy_network_result.pkl', 'rb') as f:
         result_list = pickle.load(f)
@@ -154,5 +155,5 @@ def execute_script(output_filepath):
 
 
 if __name__ == "__main__":
-    # build_network()
-    input_house_origin(r'D:\Document\HousePricing\Data\House\RentSHP1')
+    build_network()
+    input_house_origin(join(house_data_folder_filepath, 'RentSHP1'))

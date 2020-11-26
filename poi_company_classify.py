@@ -5,6 +5,7 @@
 '''
 
 from pathlib import Path
+from re import sub
 from const_variables import poi_csv_folder_filepath, city_name_list, advance_company_pattern_list, advance_zone_pattern_list, classify_pattern_list
 import pandas as pd
 import numpy as np
@@ -48,7 +49,7 @@ def filter_advance_company(df: pd.DataFrame) -> pd.DataFrame:
     df = df[df['二类'] == '公司企业;公司']
 
     df['名称'] = df['名称'].apply(filter_with_pattern_list_function(advance_company_pattern_list))
-    df = df.dropna()
+    df = df.dropna(subset=['名称'])
 
     return df
 
@@ -57,7 +58,7 @@ def filter_advance_zone(df: pd.DataFrame) -> pd.DataFrame:
     df = df[df['二类'] == '公司企业;园区']
 
     df['名称'] = df['名称'].apply(filter_with_pattern_list_function(advance_zone_pattern_list))
-    df = df.dropna()
+    df = df.dropna(subset=['名称'])
 
     return df
 
@@ -147,5 +148,5 @@ def classify_dataframe_plain(df: pd.DataFrame) -> List[pd.DataFrame]:
 
 
 if __name__ == "__main__":
-    # process_advance()
+    process_advance()
     process_classify()

@@ -40,7 +40,7 @@ def classify_hospital():
                     hospital_name_list[index] = None
 
             df_poi_hospital['名称'] = hospital_name_list
-            df_poi_hospital = df_poi_hospital.dropna()
+            df_poi_hospital = df_poi_hospital.dropna(subset=['名称'])
 
             df_hospital_total = df_hospital_total.append(df_poi_hospital)
 
