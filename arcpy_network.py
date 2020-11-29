@@ -12,7 +12,8 @@ import glob
 import traceback
 import pickle
 
-from const_variables import road_network_geodatabase_filepath, poi_shp_folder_filepath, city_name_list, od_folder_filepath, od_exclude_poi_list, house_data_folder_filepath
+from const_variables import road_network_geodatabase_filepath, poi_shp_folder_filepath, city_name_list, \
+    od_folder_filepath, od_exclude_poi_list, house_data_folder_filepath
 
 # 覆盖SHP不警告
 arcpy.env.overwriteOutput = True
@@ -44,7 +45,7 @@ def build_network():
         print('build network: ' + city_road_network_path)
 
 
-def input_house_origin(house_folder_filepath):
+def input_house_origin(house_folder_filepath, poi_name_list=[], override=False):
     for origin_filepath in glob.glob(join(house_folder_filepath, '*.shp')):
         origin_filename = splitext(basename(origin_filepath))[0]
 
@@ -63,18 +64,25 @@ def input_house_origin(house_folder_filepath):
                 print(destination_filename + ' is excludes, skip')
                 continue
 
+            if len(poi_name_list) == 0 or destination_filename in poi_name_list:
+                pass
+            else:
+                print(destination_filename + ' not in poi name list, skip')
+                continue
+
             output_filename = origin_filename + '_' + destination_filename + '.csv'
             output_filepath = join(od_folder_filepath,
                                    origin_filename + '_' + destination_filename + '.csv')
 
             print('   + ' + destination_filepath + ' -> ' + output_filepath)
 
-            if exists(output_filepath):
-                print('output file exist')
-                continue
-            if output_filepath in result_list:
-                print('result exist in result list')
-                continue
+            if not override:
+                if exists(output_filepath):
+                    print('output file exist')
+                    continue
+                if output_filepath in result_list:
+                    print('result exist in result list')
+                    continue
 
             if not has_od_layer:
                 # 创建OD成本矩阵的分析层
@@ -155,5 +163,5 @@ def execute_script(output_filepath):
 
 
 if __name__ == "__main__":
-    build_network()
-    input_house_origin(join(house_data_folder_filepath, 'RentSHP1'))
+    # build_network()
+    input_house_origin(join(house_data_folder_filepath, 'RentSHP8'), ['BusinessDistrict'], True)

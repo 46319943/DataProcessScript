@@ -3,7 +3,7 @@
 '''
 
 from pathlib import Path
-from const_variables import city_name_list, od_merge_result_folder_filepath, poi_shp_folder_filepath, poi_name_list
+from const_variables import city_name_list, od_merge_result_folder_filepath, poi_shp_folder_filepath, poi_name_list, house_origin_data_folder_filepath
 from slab.logger.base_logger import stream_file_logger
 
 import os
@@ -51,7 +51,7 @@ def poi_rename():
                 logger.info(f'{path_to_rename} -> {path_new}')
 
 
-def miss_stat():
+def miss_stat_merge():
     '''
     统计缺失城市
     :return:
@@ -65,5 +65,22 @@ def miss_stat():
             logger.info(f'{city_name} miss')
 
 
+def miss_stat_origin():
+    '''
+    统计原始房屋城市的缺失
+    :return:
+    '''
+
+    house_origin_data_folder_path = Path(house_origin_data_folder_filepath)
+    origin_csv_list =  list(house_origin_data_folder_path.glob('*.csv'))
+    origin_city_name_list = [origin_csv.stem for origin_csv in origin_csv_list]
+    for city_name in city_name_list:
+        if city_name not in origin_city_name_list:
+            logger.info(f'{city_name} miss')
+
+    pass
+
 if __name__ == '__main__':
-    poi_rename()
+    # poi_rename()
+    # miss_stat()
+    miss_stat_merge()

@@ -24,7 +24,7 @@ poi_name_list = ['BHstore', 'Market', 'Shop', 'Bazaar', 'Fitness', 'Sport', 'Squ
                  'Disease', 'Recuper', 'Clinic', 'SHospital', 'Ghospital']
 
 # 数据目录路径
-base_data_folder_filepath = r'D:\Document\HousePricing\Data'
+base_data_folder_filepath = r'C:\Document\HouseData'
 
 # 中国城市行政区目录路径
 china_shp_folder_filepath = join(base_data_folder_filepath, 'ChinaSHP')
@@ -114,7 +114,10 @@ poi_hospital_name_list = [
 ]
 
 house_field_name_list = [
-    'ID', 'RPrice', 'HPrice', 'RentWay', 'Area', 'Bedrooms', 'Living_roo', 'Toliet', 'SouthFacin', 'Decorate', 'Floor', 'Age',
+    'ID', 'RPrice',
+    # 'HPrice',
+    'RentWay', 'Area', 'Bedrooms', 'Living_roo', 'Toilet', 'SouthFacin', 'Decorate', 'Floor',
+    'Age',
 ]
 
 community_field_name_list = [

@@ -174,7 +174,8 @@ def field_stat(df: pd.DataFrame, filename):
         'BhstoreNum': 'BHstoreNum', 'BhstoreLen': 'BHstoreLen',
         'TeaHouseNum': 'TeahouseNum', 'TeaHouseLen': 'TeahouseLen',
         'GhosptialNum': 'GhospitalNum', 'GhosptialLen': 'GhospitalLen',
-        'AgiculNum': 'AgriculNum', 'AgiculLen': 'AgriculLen'})
+        'AgiculNum': 'AgriculNum', 'AgiculLen': 'AgriculLen',
+        'TolietNum': 'ToiletNum', 'TolietLen': 'ToiletLen'})
 
     # 统计字段数量
     include_field_count = 0
