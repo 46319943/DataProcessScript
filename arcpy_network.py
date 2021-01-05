@@ -32,6 +32,12 @@ def add_result(output_filepath):
         pickle.dump(result_list, f)
 
 
+def clear_result():
+    with open('arcpy_network_result.pkl', 'wb') as f:
+        pickle.dump([], f)
+    result_list = []
+
+
 def build_network():
     '''
     根据路网模板，构建所有城市的路网信息
@@ -163,5 +169,11 @@ def execute_script(output_filepath):
 
 
 if __name__ == "__main__":
+
+
     # build_network()
-    input_house_origin(join(house_data_folder_filepath, 'RentSHP8'), ['BusinessDistrict'], True)
+
+    clear_result()
+    input_house_origin(join(house_data_folder_filepath, 'Rent201905SHP'))
+
+    # input_house_origin(join(house_data_folder_filepath, 'RentSHP8'), ['BusinessDistrict'], True)

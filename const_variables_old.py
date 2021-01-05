@@ -139,16 +139,17 @@ poi_hospital_name_list = [
 
 house_field_name_list = [
     'ID', 'RPrice',
-    'Area', 'Bedrooms', 'Livrooms', 'Toilet', 'SouthFac', 'Decorate',
-    'Lon84', 'Lat84',
+    # 'HPrice',
+    'RentWay', 'Area', 'Bedrooms', 'Living_roo', 'Toilet', 'SouthFacin', 'Decorate', 'Floor',
+    'Age',
 ]
 
 community_field_name_list = [
-    'PlotRat', 'GreenRat',
+    'Plot_ratio', 'Green_rate', 'Property_f'
 ]
 
 exclude_field_name_list = [
-    'Address', 'geometry', 'ratio',
+    'Address', 'Lon84', 'Lat84', 'geometry', 'ratio',
     'ArtNum', 'ArtLen', 'AirportNum', 'AirportLen',
     'C0Num', 'C0Len', 'C1Num', 'C1Len', 'C2Num', 'C2Len', 'C3Num',
     'C3Len', 'C4Num', 'C4Len', 'C5Num', 'C5Len', 'C6Num', 'C6Len',
@@ -162,51 +163,43 @@ exclude_field_name_list = [
     'TeahouseNum', 'TeahouseLen', 'XhotelNum', 'XhotelLen', 'ZooNum', 'ZooLen',
     'CakeNum', 'CakeLen', 'ChinaEatNum', 'ChinaEatLen',
     'ClinicNum', 'ClinicLen', 'ClubNum', 'ClubLen',
-
-    'AgriculNum', 'AgriculLen',
-    'CmineNum', 'CmineLen',
-    'CzoneNum', 'CzoneLen',
-    'GhospitalNum', 'GhospitalLen',
-    'BazaarNum', 'BazaarLen',
-    'CoachNum', 'CoachLen',
-    'RailwayNum', 'RailwayLen',
-    'BusinessDistrictNum',
-    'CollegeNum', 'MiddleNum',
-    'PrimaryNum'
 ]
 
 job_field_name_list = [
     'KDEValue',
     'AdvanCompNum', 'AdvanCompLen',
-
+    'AgriculNum', 'AgriculLen',
+    'CmineNum', 'CmineLen',
+    'CzoneNum', 'CzoneLen',
     'SHDI'
 ]
 
 medical_field_name_list = [
-    '3AHospitalNum', '3AHospitalLen',
+    '3AHospitalNum', '3AHospitalLen', 'GhospitalNum', 'GhospitalLen',
     'SHospitalNum', 'SHospitalLen',
 ]
 
 convenience_field_name_list = [
-
+    'BazaarNum', 'BazaarLen',
     'BHstoreNum', 'BHstoreLen', 'ShopNum', 'ShopLen',
     'CrossNum', 'CrossLen', 'MarketNum', 'MarketLen',
 ]
 
 transportation_field_name_list = [
     'BusNum', 'BusLen',
-
+    'CoachNum', 'CoachLen',
+    'RailwayNum', 'RailwayLen',
     'SubwayNum', 'SubwayLen',
 ]
 
 district_field_name_list = [
-    'BusinessDistrictLen'
+    'BusinessDistrictNum', 'BusinessDistrictLen'
 ]
 
 school_field_name_list = [
-    'CollegeLen',
-    'MiddleLen',
-    'PrimaryLen',
+    'CollegeNum', 'CollegeLen',
+    'MiddleNum', 'MiddleLen',
+    'PrimaryNum', 'PrimaryLen',
 
 ]
 landscape_field_name_list = [

@@ -81,6 +81,6 @@ def miss_stat_origin():
     pass
 
 if __name__ == '__main__':
-    # poi_rename()
+    poi_rename()
     # miss_stat()
-    miss_stat_merge()
+    # miss_stat_merge()

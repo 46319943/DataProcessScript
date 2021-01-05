@@ -46,4 +46,4 @@ def kde_house(house_shp_filepath):
 
 
 if __name__ == "__main__":
-    input_house(join(house_data_folder_filepath, 'RentSHP8'))
+    input_house(join(house_data_folder_filepath, 'Rent201905SHP'))

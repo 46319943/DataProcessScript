@@ -164,6 +164,8 @@ def merge_house(house_shp_folder_filepath):
 def field_stat(df: pd.DataFrame, filename):
     '''
     修改字段相关信息
+    修改错误字段名称，统计应该存在、不应该存在的字段数量，对某些距离统计字段进行合并
+    添加、删除字段，排序字段
     :return:
     '''
 

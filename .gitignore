@@ -1,3 +1,5 @@
 *.pyc
-.vscode
+*.pkl
+.vscode/**
+.idea/**
 __pycache__

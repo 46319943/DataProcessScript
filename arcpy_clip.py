@@ -10,7 +10,7 @@ from os import listdir, makedirs
 from os.path import join, basename, splitext, isfile, exists, dirname
 import glob
 import arcpy
-import xlrd
+import argparse
 
 from const_variables import city_name_list, china_shp_folder_filepath, poi_csv_folder_filepath, poi_shp_folder_filepath, \
     a3_hospital_csv_filepath, business_district_csv_filepath, get_city_district_shp_filepath, house_data_folder_filepath
@@ -19,7 +19,7 @@ from const_variables import city_name_list, china_shp_folder_filepath, poi_csv_f
 spatial_ref = arcpy.SpatialReference(4326)
 
 
-def clip_poi(poi_name_list=[], override=False):
+def clip_poi(poi_name_list=[], overwrite=False):
     '''
     对POI目录下的CSV文件进行裁剪，输出到SHP对应目录
     同时，对商圈、三甲医院也进行裁剪
@@ -30,7 +30,7 @@ def clip_poi(poi_name_list=[], override=False):
         for csv_filepath in glob.glob(join(city_csv_folder_filepath, '*.csv')):
             if len(poi_name_list) == 0 or splitext(basename(csv_filepath))[0] in poi_name_list:
                 clip_csv(
-                    csv_filepath, city_shp_folder_filepath, x_field='经度_wgs84', y_field='纬度_wgs84', override=override
+                    csv_filepath, city_shp_folder_filepath, x_field='经度_wgs84', y_field='纬度_wgs84', overwrite=overwrite
                 )
 
         city_district_shp_filepath = get_city_district_shp_filepath(city_name)
@@ -38,35 +38,35 @@ def clip_poi(poi_name_list=[], override=False):
         if len(poi_name_list) == 0 or '3AHospital' in poi_name_list:
             clip_csv(a3_hospital_csv_filepath, city_shp_folder_filepath,
                      x_field='longitude_wgs84', y_field='latitude_wgs84',
-                     district_shp_filepath=city_district_shp_filepath, override=override)
+                     district_shp_filepath=city_district_shp_filepath, overwrite=overwrite)
         if len(poi_name_list) == 0 or 'BusinessDistrict' in poi_name_list:
             clip_csv(business_district_csv_filepath, city_shp_folder_filepath,
                      x_field='longitude_wgs84', y_field='latitude_wgs84',
-                     district_shp_filepath=city_district_shp_filepath, override=override)
+                     district_shp_filepath=city_district_shp_filepath, overwrite=overwrite)
 
 
-def clip_house(house_csv_folder_filepath):
+def clip_house(house_csv_folder_filepath, overwrite=False):
     '''
     对指定房屋CSV目录中的文件进行裁剪，输出到对应SHP目录
     '''
     house_shp_folder_filepath = house_csv_folder_filepath.replace('CSV', 'SHP')
     for csv_filepath in glob.glob(join(house_csv_folder_filepath, '*.csv')):
         clip_csv(
-            csv_filepath, house_shp_folder_filepath
+            csv_filepath, house_shp_folder_filepath, overwrite=overwrite
         )
     pass
 
 
-def clip_multi_house(house_folder_filepath):
+def clip_multi_house(house_folder_filepath, overwrite=False):
     '''
     寻找指定文件下，包含房屋的CSV目录，并遍历裁剪
     '''
     for house_shp_folder_filepath in glob.glob(join(house_folder_filepath, '*CSV*')):
-        clip_house(house_shp_folder_filepath)
+        clip_house(house_shp_folder_filepath, overwrite=overwrite)
 
 
 def clip_csv(csv_filepath, shp_folder_filepath, district_shp_filepath=None, x_field='Lon84', y_field='Lat84',
-             override=False):
+             overwrite=False):
     '''
     输入CSV文件路径，根据行政区划进行裁切，输出到指定目录
 
@@ -75,7 +75,7 @@ def clip_csv(csv_filepath, shp_folder_filepath, district_shp_filepath=None, x_fi
     :param district_shp_filepath: 用于裁剪的行政区划SHP文件路径。不填写会根据CSV文件路径中包含的城市名称自动推断
     :param x_field: CSV文件的经度字段
     :param y_field: CSV文件的纬度字段
-    :param override: SHP的输出文件路径存在时，是否覆盖。默认跳过
+    :param overwrite: SHP的输出文件路径存在时，是否覆盖。默认跳过
     '''
     # 文件名，不带后缀
     csv_filename = splitext(basename(csv_filepath))[0]
@@ -89,7 +89,7 @@ def clip_csv(csv_filepath, shp_folder_filepath, district_shp_filepath=None, x_fi
     print(csv_filepath + ' -> ' + output_shp_filepath)
 
     if exists(output_shp_filepath):
-        if not override:
+        if not overwrite:
             print('exist and skip')
             return
         else:
@@ -122,5 +122,18 @@ def clip_csv(csv_filepath, shp_folder_filepath, district_shp_filepath=None, x_fi
 
 
 if __name__ == "__main__":
-    clip_poi(['BusinessDistrict'], True)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--poi', action='store_true')
+    parser.add_argument('--house', action='store_true')
+    parser.add_argument('--overwrite', action='store_true')
+    args = parser.parse_args()
+
+    if args.poi:
+        clip_poi(overwrite=args.overwrite)
+
+    if args.house:
+        clip_multi_house(house_data_folder_filepath, overwrite=args.overwrite)
+
+    # clip_poi(override=False)
+    # clip_poi(['BusinessDistrict'], True)
     # clip_multi_house(house_data_folder_filepath)

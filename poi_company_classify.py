@@ -112,9 +112,15 @@ def classify_dataframe_apply(df: pd.DataFrame) -> List[pd.DataFrame]:
     def classify_function_raw(series: np.ndarray):
         name = str(series[0])
         for index, classify_pattern in enumerate(classify_pattern_list):
-            if re.search(classify_pattern, name) is not None:
-                series[-2:] = [index, classify_pattern]
-                return series
+            # 判断正则表达式是单个字符串还是列表
+            if isinstance(classify_pattern, list):
+                # 如果是列表
+                pass
+            else:
+                # 如果是单个字符串
+                if re.search(classify_pattern, name) is not None:
+                    series[-2:] = [index, classify_pattern]
+                    return series
         series[-2:] = [index + 1, '']
         return series
 
