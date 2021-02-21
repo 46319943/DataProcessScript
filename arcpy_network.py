@@ -33,6 +33,7 @@ def add_result(output_filepath):
 
 
 def clear_result():
+    global result_list
     with open('arcpy_network_result.pkl', 'wb') as f:
         pickle.dump([], f)
     result_list = []
@@ -174,6 +175,6 @@ if __name__ == "__main__":
     # build_network()
 
     clear_result()
-    input_house_origin(join(house_data_folder_filepath, 'Rent201905SHP'))
+    input_house_origin(join(house_data_folder_filepath, 'ShanghaiSHP'))
 
     # input_house_origin(join(house_data_folder_filepath, 'RentSHP8'), ['BusinessDistrict'], True)
