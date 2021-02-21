@@ -77,6 +77,8 @@ def merge_house(house_shp_folder_filepath):
         if origin_df.shape[0] == 0:
             continue
 
+        # TODO: 检测ID是否唯一
+
         # 统计城市下，各类POI
         for matrix_filepath in od_folder_path.glob(f'{origin_filename}_*.csv'):
             matrix_filename = matrix_filepath.stem
